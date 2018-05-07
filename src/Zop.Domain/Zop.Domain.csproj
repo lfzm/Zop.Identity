@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Values\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Zop.Orleans" Version="2.0.0.10504" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Zop.Identity.Constants\Zop.Identity.Constants.csproj" />
+  </ItemGroup>
+
+</Project>
