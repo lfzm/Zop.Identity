@@ -14,7 +14,7 @@ namespace Zop.Identity.Test
         /// </summary>
         /// <returns></returns>
         [TestMethod]
-        public async Task GetApiResourceAsync()
+        public async Task GetApiResource()
         {
             IApiResourceService service = Startup.CreateCluster().GrainFactory.GetGrain<IApiResourceService>(1);
             var r = await service.GetAsync();
@@ -26,16 +26,17 @@ namespace Zop.Identity.Test
         /// <param name="dto"></param>
         /// <returns></returns>
         [TestMethod]
-        public async Task AddApiResourceAsync()
+        public async Task AddApiResource()
         {
             IApiResourceService service = Startup.CreateCluster().GrainFactory.GetGrain<IApiResourceService>(0);
             var request = new DTO.ApiResourceAddRequestDto()
             {
-                Description = "测试",
-                DisplayName = "显示",
-                Name = "Api"
+                Description = "认证中心的API",
+                DisplayName = "认证中心",
+                Name = "IDC_API",
             };
-            request.Secrets.Add(new DTO.SecretDto("ad"));
+            var secret = new DTO.SecretDto("iuxBz0vhlRgpPRjEKsr4BiwdkmNctZpfmOGCmxcnt3UPO4BwYhfK14g78oDhfRSl0V");
+            request.Secrets.Add(secret);
             var r = await  service.AddAsync(request);
         }
     }

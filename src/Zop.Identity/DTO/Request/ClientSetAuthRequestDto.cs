@@ -29,7 +29,6 @@ namespace Zop.Identity.DTO.Request
         /// 允许返回令牌或授权码的URI
         /// </summary>
         public List<string> RedirectUris { get; private set; } = new List<string>();
-
         /// <summary>
         /// 指定此客户端是否可以使用本地帐户，或仅使用外部IdP。默认为true。
         /// </summary>

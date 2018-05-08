@@ -35,7 +35,7 @@ namespace Zop.Domain.Entities
         /// <param name="name">范围名称.</param>
         /// <param name="displayName">显示名称.</param>
         public ApiScope(string name, string displayName)
-              : this(name, name, null)
+              : this(name, displayName, null)
         {
 
 

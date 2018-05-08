@@ -79,26 +79,6 @@ namespace Zop.Application.Services
         {
             return await base.ServiceProvider.GetRequiredService<IClientDataStore>().IsOriginAllowedAsync(origin);
         }
-        public async Task<ResultResponseDto> ModifySecret(ClientModifySecretRequestDto dto)
-        {
-            if (!dto.IsValid())
-                return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
-            if (base.State == null)
-                return Result.ReFailure<ResultResponseDto>("客户端不存在", ResultCodes.NotFound);
-
-            var client = base.State.Clone<Client>();
-            var secret = client.Secrets.Where(f => f.Id == dto.Id).FirstOrDefault();
-            if (secret == null)
-                return Result.ReFailure<ResultResponseDto>("客户端秘钥不存在", ResultCodes.NotFound);
-
-            Mapper.Map((SecretDto)dto, secret);
-            if (!secret.IsValid())
-                return Result.ReFailure<ResultResponseDto>("客户端秘钥数据不合法", ResultCodes.InvalidParameter);
-
-            base.State = client;
-            await base.WriteStateAsync();
-            return Result.ReSuccess<ResultResponseDto>();
-        }
         public async Task<ResultResponseDto> RemoveSecrets(int id)
         {
             if (base.State == null)
@@ -201,9 +181,18 @@ namespace Zop.Application.Services
             if (base.State == null)
                 return Result.ReFailure<ResultResponseDto>("客户端不存在", ResultCodes.NotFound);
 
-            base.State.RequireClientSecret = dto.RequireClientSecret;
-            base.State.RequirePkce = dto.RequirePkce;
-            base.State.AllowPlainTextPkce = dto.AllowPlainTextPkce;
+            var client = base.State.Clone<Client>();
+            foreach (var item in dto.Secrets)
+            {
+                ClientSecret secret = Mapper.Map<ClientSecret>(item);
+                if (!secret.IsValid())
+                    return Result.ReFailure<ResultResponseDto>("秘钥请求参数错误", ResultCodes.InvalidParameter);
+                client.Secrets.Add(secret);
+            }
+            client.RequireClientSecret = dto.RequireClientSecret;
+            client.RequirePkce = dto.RequirePkce;
+            client.AllowPlainTextPkce = dto.AllowPlainTextPkce;
+            base.State = client;
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
         }

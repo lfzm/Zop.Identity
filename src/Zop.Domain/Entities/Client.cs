@@ -154,7 +154,7 @@ namespace Zop.Domain.Entities
         /// </summary>
         public bool RequireConsent { get; set; } = true;
         /// <summary>
-        /// 用户是否可以选择存储同意决定（默认为true）
+        /// 用户是否可以选择存储同意（默认为true）
         /// </summary>
         public bool AllowRememberConsent { get; set; } = true;
         /// <summary>

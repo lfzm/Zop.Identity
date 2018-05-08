@@ -81,12 +81,7 @@ namespace Zop.Identity
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ResultResponseDto> RemoveSecrets(int id);
-        /// <summary>
-        /// 修改客户端的秘钥
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        Task<ResultResponseDto> ModifySecret(ClientModifySecretRequestDto dto);
+
 
 
     }

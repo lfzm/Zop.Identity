@@ -44,6 +44,7 @@ namespace Zop.IdentityCenter
             .AddConfigurationStoreCache()
             .AddSigningCredential(options.SigningCredentialRsa);
             //.AddDeveloperSigningCredential();//使用默认签名证书
+
             services.AddAuthentication().AddIdentityServerAuthentication("idc", opt =>
             {
                 opt.RequireHttpsMetadata = options.Authority.Contains("https/");

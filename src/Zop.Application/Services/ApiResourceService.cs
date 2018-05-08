@@ -30,7 +30,7 @@ namespace Zop.Application.Services
             //获取数据商店
             IApiResourceDataStore dataStore = this.ServiceProvider.GetRequiredService<IApiResourceDataStore>();
             if (await dataStore.GetIdAsync(apiResource.Name) > 0)
-                return Result.ReFailure<ResultResponseDto>(apiResource.Name + "Api资源已经存在", ResultCodes.InvalidParameter);
+                return Result.ReFailure<ResultResponseDto>(apiResource.Name + " Api资源已经存在", ResultCodes.InvalidParameter);
             //添加秘钥
             foreach (var item in dto.Secrets)
             {

@@ -14,9 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Zop.Identity.Server\Zop.Identity.Server.csproj" />
-    <ProjectReference Include="..\..\src\Zop.Identity\Zop.Identity.csproj" />
-    <ProjectReference Include="..\..\src\Zop.Repositories\Zop.Repositories.csproj" />
+    <ProjectReference Include="..\..\Src\Zop.Identity.Server\Zop.Identity.Server.csproj" />
+    <ProjectReference Include="..\..\Src\Zop.Identity\Zop.Identity.csproj" />
   </ItemGroup>
 
 </Project>

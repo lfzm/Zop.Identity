@@ -22,6 +22,9 @@ namespace Zop.Identity.DTO.Request
         /// 使用PKCE的客户端是否可以使用纯文本代码（不推荐 - 并且默认为false）
         /// </summary>
         public bool AllowPlainTextPkce { get; set; } = false;
-
+        /// <summary>
+        /// 密钥
+        /// </summary>
+        public List<SecretDto> Secrets { get; private set; } = new List<SecretDto>();
     }
 }
