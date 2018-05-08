@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Zop.Identity.DTO;
 using Zop.DTO;
+using Orleans.Concurrency;
 
 namespace Zop.Identity
 {
@@ -18,29 +19,33 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="scopeNames"></param>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<IEnumerable<ApiResourceDto>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames);
         /// <summary>
         /// 根据name获取API资源 
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<ApiResourceDto> FindApiResourceAsync(string name);
         /// <summary>
         /// 获取所有的API资源 
         /// </summary>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<IEnumerable<ApiResourceDto>> GetAllAsync();
         /// <summary>
         /// 获取API资源 
         /// </summary>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<ApiResourceDto> GetAsync();
-
         /// <summary>
         /// 添加API资源
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<ResultResponseDto> AddAsync(ApiResourceAddRequestDto dto);
         /// <summary>
         /// 添加秘钥
@@ -54,7 +59,6 @@ namespace Zop.Identity
         /// <param name="dto"></param>
         /// <returns></returns>
         Task<ResultResponseDto> AddScope(ScopeDto dto);
-
         /// <summary>
         /// 修改Api资源中的秘钥信息
         /// </summary>

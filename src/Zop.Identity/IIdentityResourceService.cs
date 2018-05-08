@@ -1,4 +1,5 @@
 ﻿using Orleans;
+using Orleans.Concurrency;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,11 +19,13 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="scopeNames">资源名称</param>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<IEnumerable<IdentityResourceDto>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames);
         /// <summary>
         /// 获取所有的身份认证资源
         /// </summary>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<IEnumerable<IdentityResourceDto>> GetAllAsync();
         /// <summary>
         /// 获取身份认证资源
@@ -34,6 +37,7 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
+        [AlwaysInterleave]
         Task<ResultResponseDto> AddAsync(IdentityResourceAddRequestDto dto);
         /// <summary>
         /// 修改认证资源信息
