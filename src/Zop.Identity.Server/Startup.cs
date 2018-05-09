@@ -26,14 +26,14 @@ namespace Zop.Identity.Server
         }
         public static void ConfigureServices(HostBuilderContext builder, IServiceCollection services)
         {
-            const string connectionString = @"Database=zop_ids;Data Source=120.78.175.212;User Id=root;Password=zwcsroot;pooling=false;";
             services.AddAutoMapper();
             services.AddIdentityApplication();
             services.AddRepositoryStorage(rb =>
             {
+                var ro = builder.Configuration.GetSection("IdentityRepositories").Get<RepositoryOptions>();
                 rb.AddIdentityRepository(options =>
                 {
-                    options.DbContextOptions = dbBuilder => dbBuilder.UseMySql(connectionString);
+                    options.DbContextOptions = dbBuilder => dbBuilder.UseMySql(ro.ConnectionString);
                 });
             });
         }

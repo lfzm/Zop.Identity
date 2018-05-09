@@ -36,11 +36,11 @@ namespace Web_Account
             })
             .AddOpenIdConnect("oidc", opt =>
             {
-                opt.Authority = "http://localhost:5000";
+                opt.Authority = "http://localhost:5000/";
                 opt.RequireHttpsMetadata = false;
 
-                opt.ClientSecret = "123123123";
-                opt.ClientId = "123123123";
+                opt.ClientSecret = "lsrjXOipsCRBeL8o5JZsLOG4OFcjqWprg4hYzdbKCh4=";
+                opt.ClientId = "164965530879528960";
                 opt.ResponseType = "code id_token";//使用Hybrid认证
                 opt.GetClaimsFromUserInfoEndpoint = true;
                 opt.SaveTokens = true;
@@ -50,7 +50,6 @@ namespace Web_Account
                 opt.Scope.Add("openid");
                 opt.Scope.Add("profile");
                 opt.Scope.Add("phone");
-                opt.Scope.Add("nickname");
                 opt.Scope.Add("offline_access");
             });
             services.AddMvc();
@@ -70,7 +69,7 @@ namespace Web_Account
             }
 
             app.UseStaticFiles();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

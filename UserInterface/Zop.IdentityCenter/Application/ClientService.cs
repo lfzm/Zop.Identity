@@ -17,7 +17,7 @@ namespace Zop.IdentityCenter.Application
         }
         public async Task<Client> FindClientByIdAsync(string clientId)
         {
-            var service = client.GetGrain<Zop.Identity.IClientService>(clientId);
+            var service = client.GetGrain<Zop.Identity.IClientService>(clientId, OrleansClient.AccessTokenType.NotCredentials);
             var cli = await service.GetAsync();
             if (cli == null)
                 return null;

@@ -8,7 +8,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.0" />
-    <PackageReference Include="Zop" Version="2.0.0.10504" />
+    <PackageReference Include="Zop" Version="2.0.0.10509" />
   </ItemGroup>
 
   <ItemGroup>

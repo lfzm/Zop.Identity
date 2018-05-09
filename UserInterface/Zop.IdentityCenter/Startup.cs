@@ -57,6 +57,7 @@ namespace Zop.IdentityCenter
             services.AddMvc();
         }
 
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -72,10 +73,15 @@ namespace Zop.IdentityCenter
                 app.UseExceptionHandler();
             }
             app.UseStaticFiles();
-            app.UseAuthentication();
             app.UseIdentityServer();
+            app.UseAuthentication();
             app.UseSession();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                   name: "default",
+                   template: "{controller=Account}/{action=Index}/{id?}");
+            });
         }
     }
 }

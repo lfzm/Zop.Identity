@@ -33,9 +33,9 @@ namespace Zop.Application.Services
 
             base.State = identityResource;
             await base.WriteStateAsync();
-            base.DeactivateOnIdle();
             return Result.ReSuccess<ResultResponseDto>();
         }
+        [AllowAnonymous]
         public async Task<IEnumerable<IdentityResourceDto>> FindIdentityResourcesByScopeAsync(IEnumerable<string> scopeNames)
         {
             if (scopeNames == null || scopeNames.Count() == 0)
@@ -46,6 +46,7 @@ namespace Zop.Application.Services
                 return new List<IdentityResourceDto>();
             return resources.Select(f => Mapper.Map<IdentityResourceDto>(f)).ToList();
         }
+        [AllowAnonymous]
         public async Task<IEnumerable<IdentityResourceDto>> GetAllAsync()
         {
             //前往数据商店获取对应的数据

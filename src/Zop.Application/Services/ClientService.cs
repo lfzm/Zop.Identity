@@ -40,6 +40,7 @@ namespace Zop.Application.Services
             result = this.SetGrantTypes(dto.AllowedGrantTypes, client);
             if (!result.Success)
                 return Result.ReFailure<ResultResponseDto>(result);
+
             foreach (var item in dto.Secrets)
             {
                 ClientSecret secret = Mapper.Map<ClientSecret>(item);
@@ -68,6 +69,7 @@ namespace Zop.Application.Services
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
         }
+        [AllowAnonymous]
         public Task<ClientDto> GetAsync()
         {
             if (base.State==null)
@@ -230,6 +232,11 @@ namespace Zop.Application.Services
         private Result SetGrantTypes(List<string> grantTypes, Client client)
         {
             client.SetAllowedGrantTypes(s => s.Cover(grantTypes));
+
+            if(client.AllowedGrantTypes.GetList().Contains("hybrid"))
+            {
+                client.AllowOfflineAccess = true;
+            }
             return Result.ReSuccess();
         }
     }

@@ -7,7 +7,8 @@
     <VersionPrefix>1.0.0</VersionPrefix>
     <ApplicationIcon></ApplicationIcon>
     <StartupObject>Zop.Identity.Server.Program</StartupObject>
-    <Win32Resource />
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
   </PropertyGroup>
 
 
@@ -18,6 +19,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.File" Version="0.0.1" />
     <PackageReference Include="Microsoft.Orleans.Server" Version="2.0.0" />
     <PackageReference Include="Orleans.Authentication.IdentityServer4" Version="0.0.4" />
+    <PackageReference Include="OrleansDashboard" Version="2.0.1" />
     
   </ItemGroup>
   <ItemGroup>

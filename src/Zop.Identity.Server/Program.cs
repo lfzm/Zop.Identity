@@ -71,6 +71,7 @@ namespace Zop.Identity.Server
             var builder = new SiloHostBuilder()
                 .UseEnvironment("Development")
                 .UseLocalhostClustering(siloPort, gatewayPort)
+                .UseDashboard()
                 .ConfigureAppConfiguration(Startup.ConfigureAppConfiguration)
                 .ConfigureServices(Startup.ConfigureServices)
                 .ConfigureLogging((HostBuilderContext context, ILoggingBuilder logging) =>

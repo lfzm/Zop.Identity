@@ -8,7 +8,10 @@ namespace Zop.Repositories.Configuration
 {
     public class RepositoryOptions
     {
-
+        /// <summary>
+        /// 链接字符串
+        /// </summary>
+        public string ConnectionString { get; set; }
         /// <summary>
         /// Callback to configure the EF DbContext.
         /// </summary>

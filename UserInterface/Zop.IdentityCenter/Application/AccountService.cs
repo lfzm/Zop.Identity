@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Zop.DTO;
@@ -47,11 +48,10 @@ namespace Zop.IdentityCenter.Application
             //获取客户端默认的登陆链接
             string loginUrl = options.DefaultLoginUrl;
 
-            var VisitorTerminal = httpContextAccessor.HttpContext.GetVisitorTerminal();
-            string terminal = VisitorTerminal.Terminal.ToString();
-            if (loginUrl.Contains("?"))
+
+            if (!loginUrl.Contains("?"))
                 loginUrl += "?";
-            return $"{loginUrl}return_url={returnUrl}&terminal={terminal}";
+            return $"{loginUrl}return_url={WebUtility.UrlEncode(returnUrl)}";
         }
 
         public Task<IdentityTokenAddResponseDto> Login(LoginRequestDto dto)

@@ -55,7 +55,6 @@ namespace Zop.Application.Services
                 return Result.ReFailure<ResultResponseDto>("请求参数错误，Api资源不合法", ResultCodes.InvalidParameter);
             base.State = apiResource;
             await base.WriteStateAsync();
-            base.DeactivateOnIdle();
             return Result.ReSuccess<ResultResponseDto>();
         }
         public async Task<ResultResponseDto> AddScope(ScopeDto dto)
@@ -89,6 +88,7 @@ namespace Zop.Application.Services
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
         }
+        [AllowAnonymous]
         public async Task<ApiResourceDto> FindApiResourceAsync(string name)
         {
             if (name.IsNull())
@@ -104,6 +104,7 @@ namespace Zop.Application.Services
                 return null;
             return Mapper.Map<ApiResourceDto>(data);
         }
+        [AllowAnonymous]
         public async Task<IEnumerable<ApiResourceDto>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames)
         {
             if (scopeNames == null || scopeNames.Count() == 0)
@@ -114,6 +115,7 @@ namespace Zop.Application.Services
                 return new List<ApiResourceDto>();
             return resources.Select(f => Mapper.Map<ApiResourceDto>(f)).ToList();
         }
+        [AllowAnonymous]
         public async Task<IEnumerable<ApiResourceDto>> GetAllAsync()
         {
             //前往数据商店获取对应的数据

@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Zop.Orleans" Version="2.0.0.10504" />
+    <PackageReference Include="Zop.Orleans" Version="2.0.0.10509" />
   </ItemGroup>
 
   <ItemGroup>

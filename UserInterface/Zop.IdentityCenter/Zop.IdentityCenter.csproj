@@ -9,9 +9,9 @@
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="2.6.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.File" Version="0.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
     <PackageReference Include="Zop.Mvc" Version="2.0.0.10504" />
-    <PackageReference Include="Zop.OrleansClient" Version="0.1.1" />
+    <PackageReference Include="Zop.OrleansClient" Version="0.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Zop.Identity\Zop.Identity.csproj" />
+    <ProjectReference Include="..\..\Src\Zop.Identity\Zop.Identity.csproj" />
   </ItemGroup>
 
 </Project>
