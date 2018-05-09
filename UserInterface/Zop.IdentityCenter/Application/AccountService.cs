@@ -50,9 +50,8 @@ namespace Zop.IdentityCenter.Application
             var VisitorTerminal = httpContextAccessor.HttpContext.GetVisitorTerminal();
             string terminal = VisitorTerminal.Terminal.ToString();
             if (loginUrl.Contains("?"))
-                return $"{loginUrl}&return_url={returnUrl}&terminal={terminal}";
-            else
-                return $"{loginUrl}?return_url={returnUrl}&terminal={terminal}";
+                loginUrl += "?";
+            return $"{loginUrl}return_url={returnUrl}&terminal={terminal}";
         }
 
         public Task<IdentityTokenAddResponseDto> Login(LoginRequestDto dto)

@@ -28,6 +28,9 @@ namespace Zop.Repositories
 
         public override Task<IdentityToken> GetAsync(string id)
         {
+            if (id.IsNull())
+                return Task.FromResult<IdentityToken>(null);
+
             var identityToken = base.dbContext.IdentityTokens.Where(f => f.Id == id).FirstOrDefault();
             return Task.FromResult(identityToken);
         }

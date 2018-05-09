@@ -38,6 +38,8 @@ namespace Zop.Repositories
 
         public override Task<ApiResource> GetAsync(int id)
         {
+            if(id<=0)  return Task.FromResult<ApiResource>(null);
+
             var apiResource = this.dbContext.ApiResources
                 .Include(x => x.Scopes)
                 .Include(x => x.Secrets)

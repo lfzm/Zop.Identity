@@ -20,6 +20,8 @@ namespace Zop.Repositories
         }
         public override Task<PersistedGrant> GetAsync(string id)
         {
+            if (id.IsNull())
+                return Task.FromResult<PersistedGrant>(null);
             var entity = this.dbContext.PersistedGrants.Where(f => f.Id == id).FirstOrDefault();
             return Task.FromResult(entity);
         }

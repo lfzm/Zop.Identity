@@ -26,6 +26,8 @@ namespace Zop.Repositories
         }
         public override Task<IdentityResource> GetAsync(int id)
         {
+            if (id <= 0) return Task.FromResult<IdentityResource>(null);
+
             var identityResource = this.dbContext.IdentityResources.Where(f => f.Id == id).FirstOrDefault();
             return Task.FromResult(identityResource);
         }
