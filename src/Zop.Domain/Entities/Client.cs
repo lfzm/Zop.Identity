@@ -31,7 +31,7 @@ namespace Zop.Domain.Entities
         }
 
         [JsonConstructor]
-        private Client(string Id, string merchantId, IList<ClientSecret> Secrets, string AllowedGrantTypes, string RedirectUris, string AllowedScopes,
+        private Client(string Id, string merchantId, IList<Secret> Secrets, string AllowedGrantTypes, string RedirectUris, string AllowedScopes,
             IList<ClientProperty> Properties, string PostLogoutRedirectUris, string IdentityProviderRestrictions, string AllowedCorsOrigins,
             IList<ClientClaim> Claims, DateTime CreateTime)
         {
@@ -75,7 +75,7 @@ namespace Zop.Domain.Entities
         /// <summary>
         /// 密钥
         /// </summary>
-        public IList<ClientSecret> Secrets { get; private set; } = new List<ClientSecret>();
+        public IList<Secret> Secrets { get; private set; } = new List<Secret>();
         /// <summary>
         /// 是否需要密钥来从令牌端点请求令牌（默认为true）
         /// </summary>

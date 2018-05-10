@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using Zop.DTO;
 using Zop.Identity.DTO;
 using Zop.IdentityCenter.Configuration;
-using Zop.IdentityCenter.DTO;
 using Zop.OrleansClient;
 
 namespace Zop.IdentityCenter.Application
@@ -30,7 +29,7 @@ namespace Zop.IdentityCenter.Application
         private readonly IdentityCenterOptions options;
         private readonly ILogger logger;
         public AccountService(IOrleansClient client, ILogger<AccountService> logger, IIdentityServerInteractionService interaction,
-          IEventService events,  IOptions<IdentityCenterOptions> options, 
+          IEventService events, IOptions<IdentityCenterOptions> options,
           IHttpContextAccessor httpContextAccessor)
         {
             this.client = client;
@@ -40,30 +39,37 @@ namespace Zop.IdentityCenter.Application
             this.httpContextAccessor = httpContextAccessor;
             this.options = options?.Value;
         }
-     
+
 
         public async Task<string> Login(string returnUrl)
         {
             var context = await interaction.GetAuthorizationContextAsync(returnUrl);
-            //获取客户端默认的登陆链接
-            string loginUrl = options.DefaultLoginUrl;
+            if (context == null)
+            {
+                this.logger.LogDebug("登录参数不合法；" + returnUrl);
+                return options.DefaultLoginUrl;
+            }
 
+            var service = client.GetGrain<Zop.Identity.IClientService>(context.ClientId);
+            //获取客户端默认的登陆链接
+            string loginUrl = await service.GetLoginUrlAsync();
+            if (loginUrl.IsNull())
+                loginUrl = options.DefaultLoginUrl;
 
             if (!loginUrl.Contains("?"))
                 loginUrl += "?";
             return $"{loginUrl}return_url={WebUtility.UrlEncode(returnUrl)}";
         }
 
-        public Task<IdentityTokenAddResponseDto> Login(LoginRequestDto dto)
+        public async  Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto)
         {
             Result result = dto.ValidResult();
             if (!result.Success)
-            {
-                Task.FromResult(Result.ReFailure<IdentityTokenAddResponseDto>(result));
-            }
-            dto.ClientId = httpContextAccessor.HttpContext.User.UserId().ToString();
+              return Result.ReFailure<IdentityTokenAddResponseDto>(result);
+            dto.ClientId = httpContextAccessor.HttpContext.User.ClientId().ToString();
             var service = client.GetGrain<Zop.Identity.IIdentityTokenService>(Guid.NewGuid().ToString());
-            return service.StoreAsync(dto);
+            var r= await  service.StoreAsync(dto);
+            return r;
         }
 
         public async Task<string> LoginCallback(string key)
@@ -78,7 +84,7 @@ namespace Zop.IdentityCenter.Application
             await this.events.RaiseAsync(new UserLoginSuccessEvent(token.SubjectId, token.SubjectId, token.SubjectId));
             //处理记住登录状态
             AuthenticationProperties props = null;
-            if (this.options.AllowRememberLogin )
+            if (this.options.AllowRememberLogin)
             {
                 props = new AuthenticationProperties
                 {

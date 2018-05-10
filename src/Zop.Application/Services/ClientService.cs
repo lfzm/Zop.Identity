@@ -43,7 +43,7 @@ namespace Zop.Application.Services
 
             foreach (var item in dto.Secrets)
             {
-                ClientSecret secret = Mapper.Map<ClientSecret>(item);
+                Secret secret = Mapper.Map<Secret>(item);
                 if (!secret.IsValid())
                     return Result.ReFailure<ResultResponseDto>("秘钥请求参数错误", ResultCodes.InvalidParameter);
                 client.Secrets.Add(secret);
@@ -62,7 +62,7 @@ namespace Zop.Application.Services
             if (base.State == null)
                 return Result.ReFailure<ResultResponseDto>("客户端不存在", ResultCodes.NotFound);
 
-            ClientSecret secret = Mapper.Map<ClientSecret>(dto);
+            Secret secret = Mapper.Map<Secret>(dto);
             if (!secret.IsValid())
                 return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
             base.State.Secrets.Add(secret);
@@ -76,6 +76,12 @@ namespace Zop.Application.Services
                 return Task.FromResult<ClientDto>(null);
             ClientDto client = Mapper.Map<ClientDto>(base.State);
             return Task.FromResult(client);
+        }
+        public Task<string> GetLoginUrlAsync()
+        {
+            if (base.State == null)
+                return Task.FromResult<string>(null);
+            return Task.FromResult(base.State.LoginUri);
         }
         public async Task<bool> IsOriginAllowedAsync(string origin)
         {
@@ -186,7 +192,7 @@ namespace Zop.Application.Services
             var client = base.State.Clone<Client>();
             foreach (var item in dto.Secrets)
             {
-                ClientSecret secret = Mapper.Map<ClientSecret>(item);
+                Secret secret = Mapper.Map<Secret>(item);
                 if (!secret.IsValid())
                     return Result.ReFailure<ResultResponseDto>("秘钥请求参数错误", ResultCodes.InvalidParameter);
                 client.Secrets.Add(secret);
@@ -239,5 +245,7 @@ namespace Zop.Application.Services
             }
             return Result.ReSuccess();
         }
+
+    
     }
 }

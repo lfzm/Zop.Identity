@@ -9,7 +9,7 @@ using Zop.Identity.DTO;
 
 namespace Zop.Application.DtoMapper
 {
-   public class ClientDtoMapper : Profile
+    public class ClientDtoMapper : Profile
     {
         public ClientDtoMapper()
         {
@@ -18,7 +18,8 @@ namespace Zop.Application.DtoMapper
             base.CreateMap<ClientProperty, KeyValuePair<string, string>>()
                 .ReverseMap();
             base.CreateMap<Client, ClientDto>(MemberList.Destination)
-                .ForMember(f=>f.ClientSecrets,opt=>opt.MapFrom(s=>s.Secrets))
+                .ForMember(f => f.ClientId, opt => opt.MapFrom(s => s.Id))
+                .ForMember(f => f.ClientSecrets, opt => opt.MapFrom(s => s.Secrets))
                 .ForMember(f => f.AllowedGrantTypes, opt => opt.MapFrom(s => s.GetAllowedGrantTypes()))
                 .ForMember(f => f.RedirectUris, opt => opt.MapFrom(s => s.GetRedirectUris()))
                 .ForMember(f => f.AllowedScopes, opt => opt.MapFrom(s => s.GetAllowedScopes()))

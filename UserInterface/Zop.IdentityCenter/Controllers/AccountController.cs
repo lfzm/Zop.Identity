@@ -13,7 +13,6 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using IdentityServer4.Events;
-using Zop.IdentityCenter.DTO;
 using Zop.DTO;
 using Zop.Identity.DTO;
 using Zop.IdentityCenter.Application;
@@ -51,7 +50,7 @@ namespace Zop.IdentityCenter.Controllers
 
         [HttpPost]
         [Authorize(AuthenticationSchemes = "idc")]
-        public Task<IdentityTokenAddResponseDto> Login([FromBody]LoginRequestDto dto)
+        public Task<IdentityTokenAddResponseDto> Login([FromBody]IdentityTokenAddRequestDto dto)
         {
             return service.Login(dto);
         }

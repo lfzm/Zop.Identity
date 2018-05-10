@@ -50,7 +50,7 @@ namespace Zop.Domain.Entities
             }
         }
         [JsonConstructor]
-        private ApiResource(string userClaims, IList<ApiSecret> secrets, IList<ApiScope> scopes)
+        private ApiResource(string userClaims, IList<Secret> secrets, IList<ApiScope> scopes)
         {
             this.UserClaims = userClaims;
             if (secrets != null) this.Secrets = secrets;
@@ -88,7 +88,7 @@ namespace Zop.Domain.Entities
         /// 密钥
         /// </summary>
         [CollectionCount(minCount:1)]
-        public IList<ApiSecret> Secrets { get; private set; } = new List<ApiSecret>();
+        public IList<Secret> Secrets { get; private set; } = new List<Secret>();
         /// <summary>
         /// 包含范围
         /// </summary>

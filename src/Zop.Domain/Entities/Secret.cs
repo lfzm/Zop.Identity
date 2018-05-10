@@ -7,16 +7,16 @@ using Zop.Identity;
 namespace Zop.Domain.Entities
 {
     /// <summary>
-    /// Api 密钥
+    /// 秘钥
     /// </summary>
     [Serializable]
-    public class ApiSecret : Entity<int>
+    public class Secret:Entity<int>
     {
         #region 构造函数
         /// <summary>
         /// 初始化 <see cref="ApiSecret"/>
         /// </summary>
-        public ApiSecret()
+        public Secret()
         {
             Type = SecretTypes.SharedSecret;
         }
@@ -26,11 +26,10 @@ namespace Zop.Domain.Entities
         /// </summary>
         /// <param name="value">秘钥</param>
         /// <param name="expiration">过期时间</param>
-        public ApiSecret(string value, DateTime? expiration = null)
-            : this()
+        public Secret(string value, DateTime? expiration = null)
+            : this(value,"", expiration)
         {
-            Value = value;
-            Expiration = expiration;
+
         }
 
         /// <summary>
@@ -39,12 +38,13 @@ namespace Zop.Domain.Entities
         /// <param name="value">秘钥</param>
         /// <param name="description">描述</param>
         /// <param name="expiration">过期时间</param>
-        public ApiSecret(string value, string description, DateTime? expiration = null)
+
+        public Secret(string value, string description, DateTime? expiration = null)
             : this()
         {
             Description = description;
-            Value = value;
             Expiration = expiration;
+            Value = value;
         }
         #endregion
 
@@ -67,6 +67,5 @@ namespace Zop.Domain.Entities
         /// </summary>
         [MaxLength(250)]
         public string Type { get; set; }
-       
     }
 }

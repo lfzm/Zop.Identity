@@ -12,6 +12,7 @@ using Zop.DTO;
 using Zop.Identity.DTO;
 using Zop.Toolkit.IDGenerator;
 using AutoMapper;
+using System.Text;
 
 namespace Zop.Application.Services
 {
@@ -36,12 +37,12 @@ namespace Zop.Application.Services
                 return Result.ReFailure<IdentityTokenAddResponseDto>(result);
 
             //生成Token Key
-            string key = base.ServiceProvider.GetRequiredService<IIDGenerated>().NextId().ToString();
-            key = key.Sha256();
+            //string key = base.ServiceProvider.GetRequiredService<IIDGenerated>().NextId().ToString();
+         string   key =Guid.NewGuid().ToString().Replace("-","");
             IdentityToken token = new IdentityToken(key, dto.SubjectId)
             {
                 ClientId = dto.ClientId,
-                Data = dto.Data.ToJsonString(),
+                Data = dto.Claims.ToJsonString(),
                 IdentityIP4 = dto.IdentityIP4,
                 Type = dto.Type,
                 ValidityTime = dto.ValidityTime,

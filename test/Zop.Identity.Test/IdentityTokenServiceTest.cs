@@ -21,7 +21,7 @@ namespace Zop.Identity.Test
                 SubjectId = "a",
                 Type = "a"
             };
-            request.Data.Add("sud", "1");
+            request.Claims.Add("sud", "1");
             var r = await service.StoreAsync(request);
         }
 

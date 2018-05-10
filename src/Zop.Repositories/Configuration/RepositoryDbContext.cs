@@ -46,10 +46,6 @@ namespace Zop.Repositories.Configuration
             {
                 clientProperty.ToTable(options.TableConfig.ClientProperty);
             });
-            modelBuilder.Entity<ClientSecret>(clientSecret =>
-            {
-                clientSecret.ToTable(options.TableConfig.ClientSecret);
-            });
             modelBuilder.Entity<ApiResource>(apiResource =>
             {
                 apiResource.ToTable(options.TableConfig.ApiResource);
@@ -60,9 +56,10 @@ namespace Zop.Repositories.Configuration
                 apiScope.ToTable(options.TableConfig.ApiScope);
                 apiScope.HasIndex(f => f.Name).IsUnique();
             });
-            modelBuilder.Entity<ApiSecret>(apiSecret =>
+            modelBuilder.Entity<Secret>(apiSecret =>
             {
-                apiSecret.ToTable(options.TableConfig.ApiSecret);
+                apiSecret.ToTable(options.TableConfig.Secret);
+            
             });
             modelBuilder.Entity<IdentityResource>(identityResource =>
             {

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Zop.Identity.DTO;
-using Zop.IdentityCenter.DTO;
-
 namespace Zop.IdentityCenter.Application
 {
     public interface IAccountService
@@ -20,7 +18,7 @@ namespace Zop.IdentityCenter.Application
         /// </summary>
         /// <param name="dto">登录请求</param>
         /// <returns></returns>
-        Task<IdentityTokenAddResponseDto> Login(LoginRequestDto dto);
+        Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto);
         /// <summary>
         /// 登录回调
         /// </summary>

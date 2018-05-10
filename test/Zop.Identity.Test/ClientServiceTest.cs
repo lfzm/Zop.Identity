@@ -19,6 +19,8 @@ namespace Zop.Identity.Test
         [TestMethod]
         public async Task AddClientAsync()
         {
+            string a = "secret".Sha512();
+
             IClientService service = Startup.CreateCluster().GrainFactory.GetGrain<IClientService>("@");
             ClientAddRequestDto dto = new ClientAddRequestDto();
             dto.ClientName = "认证中心测试";

@@ -30,7 +30,7 @@ namespace Zop.Repositories.Configuration
         /// <value>
         /// The API secret.
         /// </value>
-        public string  ApiSecret { get; set; } = ("ApiSecrets");
+        public string Secret { get; set; } = ("Secrets");
         /// <summary>
         /// Gets or sets the API scope table configuration.
         /// </summary>
@@ -46,13 +46,7 @@ namespace Zop.Repositories.Configuration
         /// </value>
         public string  Client { get; set; } = ("Clients");
 
-        /// <summary>
-        /// Gets or sets the client secret table configuration.
-        /// </summary>
-        /// <value>
-        /// The client secret.
-        /// </value>
-        public string  ClientSecret { get; set; } = ("ClientSecrets");
+      
         /// <summary>
         /// Gets or sets the client claim table configuration.
         /// </summary>
@@ -73,13 +67,13 @@ namespace Zop.Repositories.Configuration
         /// <value>
         /// The client property.
         /// </value>
-        public string  PersistedGrant { get; set; } = ("PersistedGrant");
+        public string  PersistedGrant { get; set; } = ("PersistedGrants");
         /// <summary>
         /// Gets or sets the IdentityToken table configuration.
         /// </summary>
         /// <value>
         /// The client property.
         /// </value>
-        public string IdentityToken { get; set; } = ("IdentityToken");
+        public string IdentityToken { get; set; } = ("IdentityTokens");
     }
 }

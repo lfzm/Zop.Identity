@@ -27,7 +27,11 @@ namespace Zop.Identity
         /// <param name="origin"></param>
         /// <returns></returns>
         Task<bool> IsOriginAllowedAsync(string origin);
-
+        /// <summary>
+        /// 获取登录地址
+        /// </summary>
+        /// <returns></returns>
+        Task<string> GetLoginUrlAsync();
         /// <summary>
         /// 添加客户端
         /// </summary>

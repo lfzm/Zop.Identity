@@ -39,7 +39,7 @@ namespace Web_Account
                 opt.Authority = "http://localhost:5000/";
                 opt.RequireHttpsMetadata = false;
 
-                opt.ClientSecret = "lsrjXOipsCRBeL8o5JZsLOG4OFcjqWprg4hYzdbKCh4=";
+                opt.ClientSecret = "secret";
                 opt.ClientId = "164965530879528960";
                 opt.ResponseType = "code id_token";//使用Hybrid认证
                 opt.GetClaimsFromUserInfoEndpoint = true;

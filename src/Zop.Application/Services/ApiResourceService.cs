@@ -34,7 +34,7 @@ namespace Zop.Application.Services
             //添加秘钥
             foreach (var item in dto.Secrets)
             {
-                ApiSecret secret = Mapper.Map<ApiSecret>(item);
+                Secret secret = Mapper.Map<Secret>(item);
                 if (!secret.IsValid())
                     return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
                 apiResource.Secrets.Add(secret);
@@ -83,7 +83,7 @@ namespace Zop.Application.Services
             if (base.State == null)
                 return Result.ReFailure<ResultResponseDto>("API资源不存在", ResultCodes.NotFound);
 
-            ApiSecret secret = Mapper.Map<ApiSecret>(dto);
+            Secret secret = Mapper.Map<Secret>(dto);
             this.State.Secrets.Add(secret);
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
