@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,14 @@ namespace Web_Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication( opt =>
+             {
+                 opt.ApiName = "test_api";
+                 opt.RequireHttpsMetadata = false;
+                 opt.Authority = "http://localhost:5000/";
+                 opt.ApiSecret = "123123";
+             });
             services.AddMvc();
         }
 
@@ -33,7 +42,8 @@ namespace Web_Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //使用授权认证服务
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

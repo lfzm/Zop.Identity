@@ -31,11 +31,11 @@ namespace Zop.Identity.Test
             IApiResourceService service = Startup.CreateCluster().GrainFactory.GetGrain<IApiResourceService>(0);
             var request = new DTO.ApiResourceAddRequestDto()
             {
-                Description = "认证中心的API",
-                DisplayName = "认证中心",
-                Name = "IDC_API",
+                Description = "测试API",
+                DisplayName = "测试API",
+                Name = "test_api",
             };
-            var secret = new DTO.SecretDto("iuxBz0vhlRgpPRjEKsr4BiwdkmNctZpfmOGCmxcnt3UPO4BwYhfK14g78oDhfRSl0V");
+            var secret = new DTO.SecretDto("123123");
             request.Secrets.Add(secret);
             var r = await  service.AddAsync(request);
         }

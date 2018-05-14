@@ -20,7 +20,7 @@ namespace Zop.IdentityCenter.Configuration
         /// <summary>
         /// 记住登录生命周期
         /// </summary>
-        public TimeSpan RememberLoginLifetime { get; set; } = TimeSpan.FromDays(30);
+        public TimeSpan RememberLoginLifetime { get; set; } = TimeSpan.FromDays(7);
         /// <summary>
         /// 默认登录地址
         /// </summary>

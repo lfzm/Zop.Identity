@@ -27,6 +27,18 @@ namespace Web_Account.Controllers
         //登录用户
         public async Task<IActionResult> Index(string return_url)
         {
+            //获取客户端　token
+            string accessToken = await this.RefreshAccessToken();
+
+            HttpClientHandler handler = new HttpClientHandler();
+            handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip;
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+            //创建一个HttpClient
+            HttpClient client = new HttpClient(handler);
+            client.SetBearerToken(accessToken);
+
+            //获取用户信息
+            var usermg = await client.GetStringAsync("http://localhost:5002/api/Values");
 
             var request = new IdentityTokenAddRequestDto()
             {
@@ -40,25 +52,20 @@ namespace Web_Account.Controllers
             request.Claims.Add("phone", "18165445656");
             request.Claims.Add("nickname", "测试");
 
-            //获取客户端　token
-            string accessToken = await this.RefreshAccessToken();
+        
             string content = JsonConvert.SerializeObject( request);
 
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.AutomaticDecompression = System.Net.DecompressionMethods.GZip;
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
-            //创建一个HttpClient
-            HttpClient client = new HttpClient(handler);
-            client.SetBearerToken(accessToken);
+          
+          
             //创建一个HttpContent
             HttpContent httpContent = new StringContent(content,Encoding.UTF8);
-
             httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
             var responseMessage = await client.PostAsync("http://localhost:5000/account/login", httpContent);
             var msg = await responseMessage.Content.ReadAsStringAsync();
             var r = JsonConvert.DeserializeObject<IdentityTokenAddResponseDto>(msg);
             return base.Redirect($"http://localhost:5000/account/LoginCallback?token={r.Token}");
         }
+
 
 
         /// <summary>
@@ -75,7 +82,7 @@ namespace Web_Account.Controllers
 
             // 请求令牌
             var tokenClient = new TokenClient(disco.TokenEndpoint, "164965530879528960", "secret");
-            var tokenResponseTask = tokenClient.RequestClientCredentialsAsync("IDC_API");
+            var tokenResponseTask = tokenClient.RequestClientCredentialsAsync("IDC_API test_api");
 
             tokenResponseTask.Wait();
             var tokenResponse = tokenResponseTask.Result;

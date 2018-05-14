@@ -61,14 +61,14 @@ namespace Zop.IdentityCenter.Application
             return $"{loginUrl}return_url={WebUtility.UrlEncode(returnUrl)}";
         }
 
-        public async  Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto)
+        public async Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto)
         {
             Result result = dto.ValidResult();
             if (!result.Success)
-              return Result.ReFailure<IdentityTokenAddResponseDto>(result);
+                return Result.ReFailure<IdentityTokenAddResponseDto>(result);
             dto.ClientId = httpContextAccessor.HttpContext.User.ClientId().ToString();
             var service = client.GetGrain<Zop.Identity.IIdentityTokenService>(Guid.NewGuid().ToString());
-            var r= await  service.StoreAsync(dto);
+            var r = await service.StoreAsync(dto);
             return r;
         }
 
