@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using System.Text;
 using Zop.Identity;
+using Zop.Toolkit.Security;
 
 namespace Zop.Domain.Entities
 {
@@ -25,9 +27,10 @@ namespace Zop.Domain.Entities
         /// 初始化 <see cref="ApiSecret"/> 
         /// </summary>
         /// <param name="value">秘钥</param>
+        /// <param name="type">秘钥类型</param>
         /// <param name="expiration">过期时间</param>
-        public Secret(string value, DateTime? expiration = null)
-            : this(value,"", expiration)
+        public Secret( string value, string type = SecretTypes.SharedSecret, DateTime? expiration = null)
+            : this(value, type, "", expiration)
         {
 
         }
@@ -36,15 +39,18 @@ namespace Zop.Domain.Entities
         /// 初始化 <see cref="ApiSecret"/> 
         /// </summary>
         /// <param name="value">秘钥</param>
+        /// <param name="type">秘钥类型</param>
         /// <param name="description">描述</param>
         /// <param name="expiration">过期时间</param>
-
-        public Secret(string value, string description, DateTime? expiration = null)
+        public Secret( string value, string type = SecretTypes.SharedSecret, string description="", DateTime? expiration = null)
             : this()
         {
             Description = description;
             Expiration = expiration;
-            Value = value;
+            if (type == SecretTypes.SharedSecret)
+            {
+                Value = value.Sha256();
+            }
         }
         #endregion
 
@@ -67,5 +73,7 @@ namespace Zop.Domain.Entities
         /// </summary>
         [MaxLength(250)]
         public string Type { get; set; }
+
+        
     }
 }

@@ -8,6 +8,7 @@ namespace Zop.Domain.Entities
     /// <summary>
     /// 发放的令牌
     /// </summary>
+    [Serializable]
     public  class PersistedGrant : Entity<string>
     {
         /// <summary>

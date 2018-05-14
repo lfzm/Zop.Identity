@@ -19,7 +19,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="builder">IdentityServerBuilder</param>
         /// <param name="storeOptionsAction">仓储配置设置函数</param>
         /// <returns></returns>
-        public static IIdentityServerBuilder AddStore(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddIdentityServiceStore(this IIdentityServerBuilder builder)
         {
             //注入IdentityServer配置组件
             builder.Services.AddTransient<IClientStore, ClientService>();

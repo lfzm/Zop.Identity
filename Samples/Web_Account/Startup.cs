@@ -29,6 +29,8 @@ namespace Web_Account
                 opt.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 opt.DefaultChallengeScheme = "oidc";
             })
+          
+
             .AddCookie(opt =>
             {
                 opt.ExpireTimeSpan = TimeSpan.FromMinutes(60);
@@ -39,7 +41,7 @@ namespace Web_Account
                 opt.Authority = "http://localhost:5000/";
                 opt.RequireHttpsMetadata = false;
 
-                opt.ClientSecret = "secret";
+                opt.ClientSecret = "944d6r8wQsImSaty53p12JQ4VdmpMO0r";
                 opt.ClientId = "164965530879528960";
                 opt.ResponseType = "code id_token";//使用Hybrid认证
                 opt.GetClaimsFromUserInfoEndpoint = true;
@@ -52,6 +54,7 @@ namespace Web_Account
                 opt.Scope.Add("phone");
                 opt.Scope.Add("offline_access");
             });
+
             services.AddMvc();
         }
 

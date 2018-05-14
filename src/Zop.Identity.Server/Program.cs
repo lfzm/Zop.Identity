@@ -99,8 +99,7 @@ namespace Zop.Identity.Server
                         var config = context.Configuration.GetSection("ApiAuth").Get<IdentityServerAuthenticationOptions>();
                         opt.RequireHttpsMetadata = config.Authority.Contains("https/");
                         opt.Authority = config.Authority;
-                        opt.ApiName = config.ApiName;
-                        opt.ApiSecret = config.ApiSecret;
+                        opt.ApiName = "IDS_OL_API";
                     });
 
                 }, IdentityServerAuthenticationDefaults.AuthenticationScheme)

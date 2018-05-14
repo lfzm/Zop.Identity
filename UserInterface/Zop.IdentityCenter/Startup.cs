@@ -41,6 +41,7 @@ namespace Zop.IdentityCenter
                 opt.Caching.ResourceStoreExpiration = TimeSpan.FromHours(2);
                 opt.Caching.CorsExpiration = TimeSpan.FromHours(1);
             })
+            .AddIdentityServiceStore()
             .AddConfigurationStoreCache()
             .AddSigningCredential(options.SigningCredentialRsa);
             //.AddDeveloperSigningCredential();//使用默认签名证书

@@ -30,7 +30,6 @@ namespace Web_Api
                  opt.ApiName = "test_api";
                  opt.RequireHttpsMetadata = false;
                  opt.Authority = "http://localhost:5000/";
-                 opt.ApiSecret = "123123";
              });
             services.AddMvc();
         }

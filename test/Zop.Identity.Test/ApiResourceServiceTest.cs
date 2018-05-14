@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace Zop.Identity.Test
 {
@@ -28,6 +29,7 @@ namespace Zop.Identity.Test
         [TestMethod]
         public async Task AddApiResource()
         {
+            string d = "944d6r8wQsImSaty53p12JQ4VdmpMO0r".Sha512();
             IApiResourceService service = Startup.CreateCluster().GrainFactory.GetGrain<IApiResourceService>(0);
             var request = new DTO.ApiResourceAddRequestDto()
             {

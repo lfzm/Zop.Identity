@@ -43,7 +43,7 @@ namespace Zop.Application.Services
 
             foreach (var item in dto.Secrets)
             {
-                Secret secret = Mapper.Map<Secret>(item);
+                Secret secret = new Secret(item.Value, item.Type, item.Description, item.Expiration);
                 if (!secret.IsValid())
                     return Result.ReFailure<ResultResponseDto>("秘钥请求参数错误", ResultCodes.InvalidParameter);
                 client.Secrets.Add(secret);
@@ -62,7 +62,7 @@ namespace Zop.Application.Services
             if (base.State == null)
                 return Result.ReFailure<ResultResponseDto>("客户端不存在", ResultCodes.NotFound);
 
-            Secret secret = Mapper.Map<Secret>(dto);
+            Secret secret = new Secret(dto.Value, dto.Type, dto.Description, dto.Expiration); 
             if (!secret.IsValid())
                 return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
             base.State.Secrets.Add(secret);
@@ -192,7 +192,7 @@ namespace Zop.Application.Services
             var client = base.State.Clone<Client>();
             foreach (var item in dto.Secrets)
             {
-                Secret secret = Mapper.Map<Secret>(item);
+                Secret secret = new Secret(item.Value, item.Type, item.Description, item.Expiration);
                 if (!secret.IsValid())
                     return Result.ReFailure<ResultResponseDto>("秘钥请求参数错误", ResultCodes.InvalidParameter);
                 client.Secrets.Add(secret);

@@ -60,7 +60,7 @@ namespace Zop.IdentityCenter.Application
 
         public async  Task StoreAsync(PersistedGrant token)
         {
-            var service = client.GetGrain<Zop.Identity.IPersistedGrantService>(Guid.NewGuid().ToString());
+            var service = client.GetGrain<Zop.Identity.IPersistedGrantService>(token.Key);
             var r=await service.StoreAsync(Mapper.Map<PersistedGrantDto>(token));
             if(!r.Success)
                 logger.LogWarning("exception updating {persistedGrantKey} persisted grant in database: {SubMsg}", token.Key, r.SubMsg);

@@ -11,7 +11,7 @@ namespace Zop.Application.DtoMapper
     {
         public SecretDtoMapper()
         {
-            base.CreateMap<Secret, SecretDto>(MemberList.Destination).ReverseMap();
+            base.CreateMap<Secret, SecretDto>(MemberList.Destination);
 
 
         }

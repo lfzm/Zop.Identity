@@ -81,7 +81,7 @@ namespace Web_Account.Controllers
             if (disco.IsError) throw new Exception(disco.Error);
 
             // 请求令牌
-            var tokenClient = new TokenClient(disco.TokenEndpoint, "164965530879528960", "secret");
+            var tokenClient = new TokenClient(disco.TokenEndpoint, "164965530879528960", "944d6r8wQsImSaty53p12JQ4VdmpMO0r");
             var tokenResponseTask = tokenClient.RequestClientCredentialsAsync("IDC_API test_api");
 
             tokenResponseTask.Wait();
