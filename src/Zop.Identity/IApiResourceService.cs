@@ -45,7 +45,6 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [AlwaysInterleave]
         Task<ResultResponseDto> AddAsync(ApiResourceAddRequestDto dto);
         /// <summary>
         /// 添加秘钥

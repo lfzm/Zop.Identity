@@ -74,6 +74,7 @@ namespace Zop.Repositories
             //修改和添加
             context.ChangeTracker.TrackGraph(entry, e =>
             {
+                e.Entry.State = EntityState.Unchanged;
                 var targetType = e.Entry.Entity.GetType();
                 bool isTransient = (bool)targetType.GetProperties().First(f => f.Name == "IsTransient")?.GetValue(e.Entry.Entity);
                 if (isTransient)

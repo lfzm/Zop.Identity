@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
@@ -79,7 +81,7 @@ namespace Zop.IdentityCenter.Application
             var token = await service.GetAsync();
             if (token == null)
                 throw new ZopException(key + "授权Token不存在或者失效 ");
-
+            this.logger.LogDebug("token-> {token}" , token);
             //登录成功
             await this.events.RaiseAsync(new UserLoginSuccessEvent(token.SubjectId, token.SubjectId, token.SubjectId));
             //处理记住登录状态
@@ -110,6 +112,25 @@ namespace Zop.IdentityCenter.Application
             var user = this.httpContextAccessor.HttpContext.User;
             if (user?.Identity.IsAuthenticated == true)
             {
+                //获取外部授权提供商
+                //var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
+                //if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
+                //{
+                //    //外部授权提供商是否支持注销
+                //    var providerSupportsSignout = await httpContextAccessor.HttpContext.GetSchemeSupportsSignOutAsync(idp);
+                //    if (providerSupportsSignout)
+                //    {
+                //        if (logoutId == null)      //注销上下文为空
+                //        {
+                //            // if there's no current logout context, we need to create one
+                //            // this captures necessary info from the current logged in user
+                //            // before we signout and redirect away to the external IdP for signout
+                //            logoutId = await interaction.CreateLogoutContextAsync();
+                //        }
+                //        dto.ExternalAuthenticationScheme = idp;
+                //    }
+                //}
+                this.logger.LogDebug("SignOut Success");
                 //删除本地认证cookie
                 await this.httpContextAccessor.HttpContext.SignOutAsync();
                 // 触发注销事件

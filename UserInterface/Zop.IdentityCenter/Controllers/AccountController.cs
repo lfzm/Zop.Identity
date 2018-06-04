@@ -44,6 +44,7 @@ namespace Zop.IdentityCenter.Controllers
             if (returnUrl.IsNull())
                 return base.RedirectToAction("index");
 
+            
             string loginUrl = await service.Login(returnUrl);
             return base.Redirect(loginUrl);
         }
@@ -64,8 +65,10 @@ namespace Zop.IdentityCenter.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout(string logoutId)
         {
-            string loginUrl = await service.LoginCallback(logoutId);
-            return base.Redirect(loginUrl);
+            string logoutUrl = await service.Logout(logoutId);
+            if (logoutUrl.IsNull())
+               return base.Content("退出返回地址不能为空");
+            return base.Redirect(logoutUrl);
         }
     }
 }

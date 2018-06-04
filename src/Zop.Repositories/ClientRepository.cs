@@ -10,7 +10,7 @@ using Zop.Repositories.Configuration;
 
 namespace Zop.Repositories
 {
-    public class ClientRepository : EFRepository<Client, string>, IClientDataStore, IDisposable
+    public class ClientRepository : EFRepository<Client, string>, IClientDataStore
     {
 
         public ClientRepository(RepositoryDbContext _dbContext, ILogger<ClientRepository> logger, IChangeDetector changeDetector)
@@ -19,10 +19,7 @@ namespace Zop.Repositories
           
         }
 
-        public void Dispose()
-        {
-            this.dbContext.Dispose();
-        }
+
 
         public override Task<Client> GetAsync(string id)
         {

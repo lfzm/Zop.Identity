@@ -37,7 +37,6 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [AlwaysInterleave]
         Task<ResultResponseDto> AddAsync(ClientAddRequestDto dto);
         /// <summary>
         /// 设置客户端授权配置

@@ -37,7 +37,6 @@ namespace Zop.Identity
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        [AlwaysInterleave]
         Task<ResultResponseDto> AddAsync(IdentityResourceAddRequestDto dto);
         /// <summary>
         /// 修改认证资源信息

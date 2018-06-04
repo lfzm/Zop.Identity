@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Rewrite;
-using System.Security.Cryptography.X509Certificates;
-using IdentityServer4.AccessTokenValidation;
-using System.Security.Cryptography;
+using System;
 using Zop.IdentityCenter.Configuration;
+using Orleans.Hosting;
+using Orleans.Configuration;
+using Zop.OrleansClient.Configuration;
 
 namespace Zop.IdentityCenter
 {
@@ -33,7 +28,18 @@ namespace Zop.IdentityCenter
             services.AddAutoMapper();
             services.AddIdentityCenter(Configuration.GetSection("IdentityCenter"));
             //配置Orleans客户端
-            services.AddOrleansClient(this.Configuration.GetSection("OrleansClient"));
+            services.AddOrleansClient(build =>
+            {
+                build.AddAuthentication(Configuration.GetSection("OrleansClient"));
+                build.AddClient(Configuration.GetSection("OrleansClient:Identity"),b=>
+                {
+                    var c = Configuration.GetSection("OrleansClient:Identity").Get<OrleansClientOptions>();
+                    b.UseConsulClustering((ConsulClusteringClientOptions opt) =>
+                    {
+                        opt.Address = new Uri( c.ConsulAddress);
+                    });
+                });
+            });
             //配置IdentityServer
             services.AddIdentityServer(opt =>
             {
@@ -44,7 +50,6 @@ namespace Zop.IdentityCenter
             .AddIdentityServiceStore()
             .AddConfigurationStoreCache()
             .AddSigningCredential(options.SigningCredentialRsa);
-            //.AddDeveloperSigningCredential();//使用默认签名证书
 
             services.AddAuthentication().AddIdentityServerAuthentication("idc", opt =>
             {
@@ -60,7 +65,7 @@ namespace Zop.IdentityCenter
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -70,7 +75,7 @@ namespace Zop.IdentityCenter
             {
                 //自动跳转到https
                 var options = new RewriteOptions().AddRedirectToHttpsPermanent();
-                app.UseRewriter(options);
+                //app.UseRewriter(options);
                 app.UseExceptionHandler();
             }
             app.UseStaticFiles();

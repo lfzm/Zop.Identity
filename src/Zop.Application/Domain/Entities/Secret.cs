@@ -49,7 +49,7 @@ namespace Zop.Domain.Entities
             Expiration = expiration;
             if (type == SecretTypes.SharedSecret)
             {
-                Value = value.Sha256();
+                Value = value.Sha512();
             }
         }
         #endregion

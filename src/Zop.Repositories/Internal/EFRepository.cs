@@ -14,7 +14,7 @@ namespace Zop.Repositories
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TPrimaryKey"></typeparam>
-    public abstract class EFRepository<TEntity, TPrimaryKey> : Repository<TEntity, TPrimaryKey> where TEntity : class, IEntity
+    public abstract class EFRepository<TEntity, TPrimaryKey> : Repository<TEntity, TPrimaryKey>, IDisposable where TEntity : class, IEntity
     {
         public readonly RepositoryDbContext dbContext;
         private readonly ILogger Logger;
@@ -33,6 +33,11 @@ namespace Zop.Repositories
             this.dbContext.Delete(entity);
             int count = this.dbContext.SaveChanges();
             return Task.FromResult(count);
+        }
+
+        public void Dispose()
+        {
+            this.dbContext.Dispose();
         }
 
         public override Task<TEntity> InsertAsync(TEntity entity)

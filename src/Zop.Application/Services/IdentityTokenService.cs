@@ -38,7 +38,7 @@ namespace Zop.Application.Services
 
             //生成Token Key
             //string key = base.ServiceProvider.GetRequiredService<IIDGenerated>().NextId().ToString();
-            string key = Guid.NewGuid().ToString().Replace("-", "");
+            string key = Guid.NewGuid().ToString("N");
             IdentityToken token = new IdentityToken(key, dto.SubjectId)
             {
                 ClientId = dto.ClientId,

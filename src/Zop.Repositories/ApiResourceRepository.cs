@@ -13,7 +13,7 @@ using Zop.Repositories.Configuration;
 
 namespace Zop.Repositories
 {
-    public class ApiResourceRepository : EFRepository<ApiResource, int>, IApiResourceDataStore, IDisposable
+    public class ApiResourceRepository : EFRepository<ApiResource, int>, IApiResourceDataStore
     {
         public ApiResourceRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IChangeDetector changeDetector)
             : base(dbContext, logger, changeDetector)
@@ -21,10 +21,6 @@ namespace Zop.Repositories
 
         }
 
-        public void Dispose()
-        {
-            this.dbContext.Dispose();
-        }
 
         public Task<IList<ApiResource>> GetAllAsync()
         {

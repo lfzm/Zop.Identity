@@ -99,7 +99,7 @@ namespace Zop.Application.Services
                 return null;
             //通过ID获取数据
             var service = this.GrainFactory.GetStateGrain<ApiResource>(id);
-            var data = await service.ReadState();
+            var data = await service.ReadAsync();
             if (data == null)
                 return null;
             return Mapper.Map<ApiResourceDto>(data);

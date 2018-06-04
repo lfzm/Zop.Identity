@@ -12,7 +12,7 @@ namespace Zop.IdentityCenter.Application.DtoMapper
         public ClaimMapper()
         {
             CreateMap<KeyValuePair<string, string>, Claim>(MemberList.Destination)
-               .ConstructUsing(src => new Claim(src.Key, src.Value))
+               .ConstructUsing(src => new Claim(src.Key, (src.Value!=null? src.Value:"")))
                .ReverseMap();
         }
     }

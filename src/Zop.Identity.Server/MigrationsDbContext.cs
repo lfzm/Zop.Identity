@@ -15,7 +15,7 @@ namespace Zop.Identity.Server
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
             string connectionString = @"Database=Test;Data Source=127.0.0.1;User Id=root;Password=sapass;pooling=false";
             optionsBuilder.UseMySql(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
         }

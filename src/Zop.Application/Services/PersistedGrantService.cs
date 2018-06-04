@@ -73,7 +73,7 @@ namespace Zop.Application.Services
         {
             if (base.State == null)
                 return Result.ReFailure<ResultResponseDto>("发放令牌已经不存在",ResultCodes.NotFound);
-            await base.ClearState();
+            await base.ClearAsync();
             base.DeactivateOnIdle();
             return Result.ReSuccess<ResultResponseDto>();
         }

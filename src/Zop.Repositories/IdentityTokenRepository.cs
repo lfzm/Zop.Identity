@@ -14,17 +14,14 @@ namespace Zop.Repositories
     /// <summary>
     /// 身份令牌信息
     /// </summary>
-    public class IdentityTokenRepository : EFRepository<IdentityToken, string>, IDisposable
+    public class IdentityTokenRepository : EFRepository<IdentityToken, string>
     {
         public IdentityTokenRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IChangeDetector changeDetector)
             : base(dbContext, logger, changeDetector)
         {
 
         }
-        public void Dispose()
-        {
-            base.dbContext.Dispose();
-        }
+
 
         public override Task<IdentityToken> GetAsync(string id)
         {

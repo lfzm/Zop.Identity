@@ -5,13 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zop.Domain\Zop.Domain.csproj" />
     <ProjectReference Include="..\Zop.Identity\Zop.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.3" />
     <PackageReference Include="Orleans.Authorization" Version="0.0.9" />
+    <PackageReference Include="Zop.Orleans" Version="2.0.0-bate1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Domain\Services\" />
+    <Folder Include="Domain\Values\" />
   </ItemGroup>
 
 </Project>
