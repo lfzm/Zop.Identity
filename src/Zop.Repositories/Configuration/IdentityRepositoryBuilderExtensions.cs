@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
 using Zop.Repositories;
 using Zop.Repositories.Configuration;
@@ -60,10 +57,10 @@ namespace Microsoft.Extensions.DependencyInjection
             builder.AddRepository<IdentityTokenRepository, IdentityToken>();
 
             //添加数据商店服务
-            builder.Service.AddTransient<IApiResourceDataStore, ApiResourceRepository>();
-            builder.Service.AddTransient<IClientDataStore, ClientRepository>();
-            builder.Service.AddTransient<IIdentityResourceDataStore, IdentityResourceRepository>();
-            builder.Service.AddTransient<IPersistedGrantDataStore, PersistedGrantRepository>();
+            builder.Service.AddTransient<IApiResourceRepositories, ApiResourceRepository>();
+            builder.Service.AddTransient<IClientRepositories, ClientRepository>();
+            builder.Service.AddTransient<IIdentityResourceRepositories, IdentityResourceRepository>();
+            builder.Service.AddTransient<IPersistedGrantRepositories, PersistedGrantRepository>();
 
             return builder;
         }

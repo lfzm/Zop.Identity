@@ -1,21 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using AutoMapper;
-using Orleans.Authorization;
+﻿using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Orleans.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Zop.Domain.Entities;
+using Zop.DTO;
 using Zop.Identity;
 using Zop.Identity.DTO;
 using Zop.Repositories;
-using Zop.Application.DataStore;
-using Zop.DTO;
 
 namespace Zop.Application.Services
 {
-    [Authorize]
     [StorageProvider(ProviderName = RepositoryStorage.DefaultName)]
     public class ApiResourceService : ApplicationService<ApiResource>, IApiResourceService
     {
@@ -28,7 +25,7 @@ namespace Zop.Application.Services
             apiResource.Description = dto.Description;
 
             //获取数据商店
-            IApiResourceDataStore dataStore = this.ServiceProvider.GetRequiredService<IApiResourceDataStore>();
+            IApiResourceRepositories dataStore = this.ServiceProvider.GetRequiredService<IApiResourceRepositories>();
             if (await dataStore.GetIdAsync(apiResource.Name) > 0)
                 return Result.ReFailure<ResultResponseDto>(apiResource.Name + " Api资源已经存在", ResultCodes.InvalidParameter);
             //添加秘钥
@@ -68,7 +65,7 @@ namespace Zop.Application.Services
             if (!scope.IsValid())
                 return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
 
-            IApiResourceDataStore dataStore = this.ServiceProvider.GetRequiredService<IApiResourceDataStore>();
+            IApiResourceRepositories dataStore = this.ServiceProvider.GetRequiredService<IApiResourceRepositories>();
             if (await dataStore.GetScopeIdAsync(scope.Name) > 0)
                 return Result.ReFailure<ResultResponseDto>(scope.Name + "Api范围已经存在", ResultCodes.InvalidParameter);
             this.State.Scopes.Add(scope);
@@ -88,13 +85,12 @@ namespace Zop.Application.Services
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
         }
-        [AllowAnonymous]
         public async Task<ApiResourceDto> FindApiResourceAsync(string name)
         {
             if (name.IsNull())
                 return null;
             //根据Name获取对应的Id
-            int id = await base.ServiceProvider.GetRequiredService<IApiResourceDataStore>().GetIdAsync(name);
+            int id = await base.ServiceProvider.GetRequiredService<IApiResourceRepositories>().GetIdAsync(name);
             if (id <= 0)
                 return null;
             //通过ID获取数据
@@ -104,22 +100,20 @@ namespace Zop.Application.Services
                 return null;
             return Mapper.Map<ApiResourceDto>(data);
         }
-        [AllowAnonymous]
         public async Task<IEnumerable<ApiResourceDto>> FindApiResourcesByScopeAsync(IEnumerable<string> scopeNames)
         {
             if (scopeNames == null || scopeNames.Count() == 0)
                 return new List<ApiResourceDto>();
             //前往数据商店获取对应的数据
-            var resources = await base.ServiceProvider.GetRequiredService<IApiResourceDataStore>().GetListAsync(scopeNames);
+            var resources = await base.ServiceProvider.GetRequiredService<IApiResourceRepositories>().GetListAsync(scopeNames);
             if (resources == null || resources.Count == 0)
                 return new List<ApiResourceDto>();
             return resources.Select(f => Mapper.Map<ApiResourceDto>(f)).ToList();
         }
-        [AllowAnonymous]
         public async Task<IEnumerable<ApiResourceDto>> GetAllAsync()
         {
             //前往数据商店获取对应的数据
-            var resources = await base.ServiceProvider.GetRequiredService<IApiResourceDataStore>().GetAllAsync();
+            var resources = await base.ServiceProvider.GetRequiredService<IApiResourceRepositories>().GetAllAsync();
             if (resources == null || resources.Count == 0)
                 return new List<ApiResourceDto>();
             return resources.Select(f => Mapper.Map<ApiResourceDto>(f)).ToList();

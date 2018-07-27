@@ -5,7 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Zop.Orleans" Version="2.0.0-bate1" />
+    <PackageReference Include="Zop.Orleans" Version="3.0.0-bate17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Values\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Zop.Identity\Zop.Identity.csproj" />
   </ItemGroup>
 
 </Project>

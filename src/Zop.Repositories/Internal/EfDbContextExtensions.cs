@@ -60,55 +60,72 @@ namespace Zop.Repositories
             if (entry == null)
                 throw new RepositoryDataException("Update newestEntity and originalEntity Can not be empty");
 
-            //清除跟踪器
-            context.ClearChangeTracker();
             //删除
-            var removes = changeManager.GetChangers(ChangeEntryType.Remove);
+            var removes = changeManager.GetDifferences(EntityChangeType.Remove);
             if (removes.IsNullOrAuy())
             {
                 foreach (var remove in removes)
                 {
-                    context.Delete(remove.OriginalEntry);
+                    context.Delete(remove.OldEntity);
                 }
             }
-            //修改和添加
+            
+            List<int> addEntity = new List<int>();
+            //遍历图形 设置对象修改或者添加
             context.ChangeTracker.TrackGraph(entry, e =>
             {
-                e.Entry.State = EntityState.Unchanged;
-                var targetType = e.Entry.Entity.GetType();
-                bool isTransient = (bool)targetType.GetProperties().First(f => f.Name == "IsTransient")?.GetValue(e.Entry.Entity);
-                if (isTransient)
+                int sourceHashCode = e.SourceEntry?.Entity.GetHashCode() ?? 0;
+                int entityHashCode = e.Entry.Entity.GetHashCode();
+                EntityDifference change = changeManager.GetDifference(entityHashCode);
+                //如果上级添加，子级也添加
+                if (addEntity.Contains(sourceHashCode))
                 {
+                    addEntity.Add(e.Entry.Entity.GetHashCode());
                     e.Entry.State = EntityState.Added;
+                    return;
+                }
+                if (change == null)
+                {
+                    e.Entry.State = EntityState.Unchanged;
+                    return;
+                }
+                if (change.Type == EntityChangeType.Addition)
+                {
+                    addEntity.Add(entityHashCode);
+                    e.Entry.State = EntityState.Added;
+                    return;
                 }
                 else
                 {
-                    //获取ID（唯一标示）
-                    var id = targetType.GetProperties().Where(f => f.Name == "Id" && f.PropertyType.IsValueType).FirstOrDefault()?.GetValue(e.Entry.Entity);
-                    ChangeEntry change = changeManager.GetChanger(targetType, id);
-                    if (change == null)
-                        return;
-
+                    e.Entry.State = EntityState.Unchanged;
                     foreach (var item in change.ChangePropertys)
                     {
                         e.Entry.Member(item.Name).IsModified = true;
                     }
                 }
-
             });
 
+            
         }
 
-
-        private static void ClearChangeTracker(this DbContext context)
+        /// <summary>
+        /// 进行EF变动跟踪脱机处理，现在设置为Transient的，暂时无需调用此方法
+        /// </summary>
+        /// <param name="context"></param>
+        private static void DetachedChangeTracker(this DbContext context)
         {
             context.ChangeTracker.AutoDetectChangesEnabled = false;
-            //清除所有的快照
+            //清除所有的EF的变动跟踪器
             foreach (var item in context.ChangeTracker.Entries().ToList())
             {
-                item.State = EntityState.Detached;
+                try
+                {
+                    item.State = EntityState.Detached;
+                }
+                catch (Exception)
+                {
+                }
             }
-
         }
     }
 }

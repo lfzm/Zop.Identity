@@ -1,21 +1,17 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
-using Orleans.Hosting;
-using System.Net;
 using Orleans.Configuration;
-using Orleans.Runtime;
-using Zop.Application.Services;
-using Microsoft.Extensions.Configuration;
-using System.Threading;
-using Orleans.Authentication.IdentityServer4;
-using Orleans.Authentication;
-using System.Net.Sockets;
+using Orleans.Hosting;
+using System;
 using System.IO;
-using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+using System.Threading.Tasks;
 using Zop.Repositories.Configuration;
-using Microsoft.EntityFrameworkCore;
 
 namespace Zop.Identity.Server
 {
@@ -25,13 +21,13 @@ namespace Zop.Identity.Server
         static ISiloHost silo;
         static bool siloStopping = false;
         static readonly object syncLock = new object();
+
         public static void Main(string[] args)
         {
             try
             {
                 SetupApplicationShutdown();
-
-                silo = CreateSilo();
+                silo = CreateSilo(args);
                 silo.StartAsync().Wait();
                 Console.WriteLine(DateTime.Now + "  Zop.Identity.Server Start...");
                 /// Wait for the silo to completely shutdown before exiting. 
@@ -64,13 +60,14 @@ namespace Zop.Identity.Server
                 /// but the app doesn't crash because a.Cancel has been set = true
             };
         }
-        static ISiloHost CreateSilo()
+        static ISiloHost CreateSilo(string[] args)
         {
+            (int siloPort ,int gatewayPort, IPAddress advertisedIP) = GetEndpointsOption(args);
+            Console.WriteLine(($"siloPort：{siloPort}，gatewayPort：{gatewayPort}，advertisedIP：{advertisedIP}"));
+
+            //启动SiloHost
             var builder = new SiloHostBuilder()
-                .UseDashboard(opt =>
-                {
-                    opt.Port = 1010;
-                })
+                .UseDashboard(opt => opt.HostSelf = false)
                 .UseConsulClustering((OptionsBuilder<ConsulClusteringSiloOptions> opt) =>
                 {
                     opt.Configure<IConfiguration>((options, config) =>
@@ -79,21 +76,25 @@ namespace Zop.Identity.Server
                         options.Address = c.Address;
                     });
                 })
-              
+                .ConfigureHostConfiguration((IConfigurationBuilder config) =>
+                {
+                    config.SetBasePath(Directory.GetCurrentDirectory())
+                            .AddCommandLine(args)
+                            .AddJsonFile("hostsettings.json", optional: true, reloadOnChange: true);
+                })
                 .Configure<ClusterOptions>(options =>
                 {
                     options.ClusterId = "Zop.Identity";
                     options.ServiceId = "Zop.Identity";
                 })
-                //.ConfigureEndpoints(Dns.GetHostName(),siloPort:11111, gatewayPort:10000, listenOnAnyHostAddress:true)
-                .ConfigureEndpoints(IPAddress.Parse("120.78.175.212"), siloPort: 11111, gatewayPort: 10000, listenOnAnyHostAddress: true)
+                .ConfigureEndpoints(advertisedIP, siloPort: siloPort, gatewayPort: gatewayPort, listenOnAnyHostAddress: true)
                 .ConfigureAppConfiguration((HostBuilderContext context, IConfigurationBuilder config) =>
                 {
                     config.SetBasePath(Directory.GetCurrentDirectory())
                             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                             .AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true);
                 })
-                .ConfigureServices((HostBuilderContext context, IServiceCollection services)=>
+                .ConfigureServices((HostBuilderContext context, IServiceCollection services) =>
                 {
                     services.AddAutoMapper();
                     services.AddIdentityApplication();
@@ -113,18 +114,6 @@ namespace Zop.Identity.Server
                     logging.AddFile(context.Configuration.GetSection("Logging:File"));
                 })
                 .Configure<ProcessExitHandlingOptions>(options => options.FastKillOnProcessExit = false)
-                .AddAuthentication((context, build) =>
-                {
-                    build.AddIdentityServerAuthentication(opt =>
-                    {
-                        var config = context.Configuration.GetSection("IdentityOptions").Get<IdentityServerAuthenticationOptions>();
-                        opt.RequireHttpsMetadata = config.Authority.Contains("https/");
-                        opt.Authority = config.Authority;
-                        opt.ApiName = "IDS_OL_API";
-                    });
-
-                }, IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddAuthorizationFilter()
                 .AddExceptionsFilter();
 
             var host = builder.Build();
@@ -135,6 +124,32 @@ namespace Zop.Identity.Server
         {
             await silo.StopAsync();
             _siloStopped.Set();
+        }
+
+        static ValueTuple<int, int, IPAddress> GetEndpointsOption(string[] args)
+        {
+            IConfiguration configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                              .AddCommandLine(args)
+                              .AddJsonFile("hostsettings.json", optional: true, reloadOnChange: true)
+                              .Build();
+            IPAddress advertisedIP;
+            int siloPort = 0;
+            int gatewayPort = 0;
+            if (!configuration["SiloPort"].IsNull())
+                siloPort = int.Parse(configuration["SiloPort"]);
+            else
+                siloPort = ConfigUtilities.GetRandAvailablePort();
+            if (!configuration["GatewayPort"].IsNull())
+                gatewayPort = int.Parse(configuration["GatewayPort"]);
+            else
+                gatewayPort = ConfigUtilities.GetRandAvailablePort(ignorePort: siloPort);
+            if (!configuration["AdvertisedIP"].IsNull())
+                advertisedIP = IPAddress.Parse(configuration["AdvertisedIP"]);
+            else
+                advertisedIP = ConfigUtilities.ResolveIPAddress(Dns.GetHostName(), null, AddressFamily.InterNetwork).Result;
+
+            return ValueTuple.Create<int, int, IPAddress>(siloPort, gatewayPort, advertisedIP);
+        
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using IdentityServer4.Validation;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -74,6 +75,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddIdentityCenter(this IServiceCollection services)
         {
+            services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
             services.AddTransient<IAccountService, AccountService>();
             return services;
         }

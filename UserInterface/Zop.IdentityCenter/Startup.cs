@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using Zop.IdentityCenter.Configuration;
-using Orleans.Hosting;
 using Orleans.Configuration;
-using Zop.OrleansClient.Configuration;
+using Orleans.Hosting;
+using System;
+using Zop.Extensions.OrleansClient.Configuration;
+using Zop.IdentityCenter.Configuration;
 
 namespace Zop.IdentityCenter
 {
@@ -30,7 +29,6 @@ namespace Zop.IdentityCenter
             //配置Orleans客户端
             services.AddOrleansClient(build =>
             {
-                build.AddAuthentication(Configuration.GetSection("OrleansClient"));
                 build.AddClient(Configuration.GetSection("OrleansClient:Identity"),b=>
                 {
                     var c = Configuration.GetSection("OrleansClient:Identity").Get<OrleansClientOptions>();
@@ -50,15 +48,6 @@ namespace Zop.IdentityCenter
             .AddIdentityServiceStore()
             .AddConfigurationStoreCache()
             .AddSigningCredential(options.SigningCredentialRsa);
-
-            services.AddAuthentication().AddIdentityServerAuthentication("idc", opt =>
-            {
-                opt.RequireHttpsMetadata = options.Authority.Contains("https/");
-                opt.Authority = options.Authority;
-                opt.ApiSecret = options.ApiSecret;
-                opt.ApiName = options.ApiName;
-            });
-
             services.AddSession();
             services.AddMvc();
         }
@@ -74,13 +63,10 @@ namespace Zop.IdentityCenter
             else
             {
                 //自动跳转到https
-                var options = new RewriteOptions().AddRedirectToHttpsPermanent();
-                //app.UseRewriter(options);
-                app.UseExceptionHandler();
+                app.UseHttpsRedirection();
             }
             app.UseStaticFiles();
             app.UseIdentityServer();
-            app.UseAuthentication();
             app.UseSession();
             app.UseMvc(routes =>
             {

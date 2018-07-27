@@ -2,19 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
-using Zop.Repositories.ChangeDetector;
 using Zop.Repositories.Configuration;
 
 namespace Zop.Repositories
 {
-    public class PersistedGrantRepository : EFRepository<PersistedGrant, string>, IPersistedGrantDataStore
+    public class PersistedGrantRepository : EFRepository<PersistedGrant, string>, IPersistedGrantRepositories
     {
-        public PersistedGrantRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IChangeDetector changeDetector)
-            : base(dbContext, logger, changeDetector)
+        public PersistedGrantRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IServiceProvider serviceProvider)
+            : base(dbContext, logger, serviceProvider)
         {
 
         }

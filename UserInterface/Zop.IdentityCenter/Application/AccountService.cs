@@ -1,24 +1,18 @@
 ﻿using AutoMapper;
-using IdentityModel;
-using IdentityServer4;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Zop.DTO;
-using Zop.Identity.DTO;
+using Zop.Extensions.OrleansClient;
 using Zop.IdentityCenter.Configuration;
-using Zop.OrleansClient;
 
 namespace Zop.IdentityCenter.Application
 {
@@ -63,16 +57,6 @@ namespace Zop.IdentityCenter.Application
             return $"{loginUrl}return_url={WebUtility.UrlEncode(returnUrl)}";
         }
 
-        public async Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto)
-        {
-            Result result = dto.ValidResult();
-            if (!result.Success)
-                return Result.ReFailure<IdentityTokenAddResponseDto>(result);
-            dto.ClientId = httpContextAccessor.HttpContext.User.ClientId().ToString();
-            var service = client.GetGrain<Zop.Identity.IIdentityTokenService>(Guid.NewGuid().ToString());
-            var r = await service.StoreAsync(dto);
-            return r;
-        }
 
         public async Task<string> LoginCallback(string key)
         {
@@ -81,7 +65,13 @@ namespace Zop.IdentityCenter.Application
             var token = await service.GetAsync();
             if (token == null)
                 throw new ZopException(key + "授权Token不存在或者失效 ");
-            this.logger.LogDebug("token-> {token}" , token);
+            this.logger.LogDebug("token-> {token}", token);
+
+            string clientIp = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+            if (clientIp == "::1")  clientIp = "127.0.0.1";
+            if (token.IdentityIP4 != clientIp)
+                throw new ZopException(key + "授权无效");
+
             //登录成功
             await this.events.RaiseAsync(new UserLoginSuccessEvent(token.SubjectId, token.SubjectId, token.SubjectId));
             //处理记住登录状态
@@ -98,9 +88,7 @@ namespace Zop.IdentityCenter.Application
             List<Claim> claims = Mapper.Map<List<Claim>>(token.Data);
             // 登录信息保存到Cookie中
             await httpContextAccessor.HttpContext.SignInAsync(token.SubjectId, "", props, claims.ToArray());
-
             return token.ReturnUrl;
-
         }
 
         public async Task<string> Logout(string logoutId)

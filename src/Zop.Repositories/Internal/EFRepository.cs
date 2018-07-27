@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,10 +23,10 @@ namespace Zop.Repositories
         {
 
         }
-        public EFRepository(RepositoryDbContext dbContext, ILogger logger,IChangeDetector changeDetector )
-            :base(changeDetector)
+        public EFRepository(RepositoryDbContext dbContext, ILogger logger, IServiceProvider serviceProvider)
+            : base(serviceProvider)
         {
-            this.Logger= logger;
+            this.Logger = logger;
             this.dbContext = dbContext;
         }
         public override Task DeleteAsync(TEntity entity)
@@ -38,21 +39,30 @@ namespace Zop.Repositories
         public void Dispose()
         {
             this.dbContext.Dispose();
+            this.Dispose();
         }
 
         public override Task<TEntity> InsertAsync(TEntity entity)
         {
-            this.dbContext.Add(entity);
+            var e = this.dbContext.Add(entity);
             this.dbContext.SaveChanges();
-            return Task.FromResult(entity);
+            return Task.FromResult(e.Entity);
         }
 
         public async override Task<TEntity> UpdateAsync(TEntity entity)
         {
-            IChangeManager changeManager = await this.GetChangeManagerAsync(entity);
-            this.dbContext.Update(changeManager, entity);
-            this.dbContext.SaveChanges();
-            return entity;
+            try
+            {
+                IChangeManager changeManager = await this.GetChangeManagerAsync(entity);
+                this.dbContext.Update(changeManager, entity);
+                this.dbContext.SaveChanges();
+                return entity;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
     }

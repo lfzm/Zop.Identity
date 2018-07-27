@@ -7,6 +7,5 @@ namespace Zop.Application.Configuration
     public class Opations
     {
 
-
     }
 }

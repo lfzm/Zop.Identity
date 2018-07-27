@@ -1,0 +1,7 @@
+{
+  "ApplicationName": "IDS",
+  "Environment": "Development",
+  "SiloPort": "10000",
+  "GatewayPort": "11111",
+  "AdvertisedIP": "127.0.0.1"
+}

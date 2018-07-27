@@ -15,9 +15,9 @@ namespace Zop.Identity.Test
             var service = Startup.CreateCluster().GrainFactory.GetGrain<IIdentityResourceService>(0);
             var request = new DTO.IdentityResourceAddRequestDto()
             {
-                Name= "email",
+                Name = "email",
                 Description = "邮箱地址",
-                DisplayName= "邮箱地址"
+                DisplayName = "邮箱地址"
             };
             request.UserClaims.Add("email");
 
@@ -33,6 +33,12 @@ namespace Zop.Identity.Test
         {
             var service = Startup.CreateCluster().GrainFactory.GetGrain<IIdentityResourceService>(1);
             var r = await service.GetAsync();
+        }
+        [TestMethod]
+        public void FindIdentityResourcesByScopeAsync()
+        {
+            var service = Startup.CreateCluster().GrainFactory.GetGrain<IIdentityResourceService>(1);
+            var data =  service.FindIdentityResourcesByScopeAsync(new List<string>() { "profile", "openid" }).Result;
         }
     }
 }

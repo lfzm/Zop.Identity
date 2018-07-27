@@ -1,24 +1,19 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using Orleans.Authorization;
 using Orleans.Providers;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
+using Zop.DTO;
+using Zop.Extensions.IDGenerator;
 using Zop.Identity;
 using Zop.Identity.DTO;
-using Zop.Repositories;
-using Zop.DTO;
 using Zop.Identity.DTO.Request;
-using System.Linq;
-using Zop.Toolkit.IDGenerator;
+using Zop.Repositories;
 
 namespace Zop.Application.Services
 {
-    [Authorize]
     [StorageProvider(ProviderName = RepositoryStorage.DefaultName)]
     public class ClientService : ApplicationService<Client>, IClientService
     {
@@ -28,11 +23,14 @@ namespace Zop.Application.Services
                 return Result.ReFailure<ResultResponseDto>("请求参数错误", ResultCodes.InvalidParameter);
             //生成
             string clientId = base.ServiceProvider.GetRequiredService<IIDGenerated>().NextId().ToString();
-            Client client = new Client(clientId, dto.MerchantId);
-            client.ClientName = dto.ClientName;
-            client.ClientUri = dto.ClientUri;
-            client.LogoUri = dto.LogoUri;
-            client.Description = dto.Description;
+            Client client = new Client(clientId, dto.MerchantId)
+            {
+                ClientName = dto.ClientName,
+                ClientUri = dto.ClientUri,
+                LogoUri = dto.LogoUri,
+                LoginUri = dto.LoginUri,
+                Description = dto.Description
+            };
             var result = this.SetScopes(dto.AllowedScopes, client);
             if (!result.Success)
                 return Result.ReFailure<ResultResponseDto>(result);
@@ -69,7 +67,6 @@ namespace Zop.Application.Services
             await base.WriteStateAsync();
             return Result.ReSuccess<ResultResponseDto>();
         }
-        [AllowAnonymous]
         public Task<ClientDto> GetAsync()
         {
             if (base.State==null)
@@ -85,7 +82,7 @@ namespace Zop.Application.Services
         }
         public async Task<bool> IsOriginAllowedAsync(string origin)
         {
-            return await base.ServiceProvider.GetRequiredService<IClientDataStore>().IsOriginAllowedAsync(origin);
+            return await base.ServiceProvider.GetRequiredService<IClientRepositories>().IsOriginAllowedAsync(origin);
         }
         public async Task<ResultResponseDto> RemoveSecrets(int id)
         {

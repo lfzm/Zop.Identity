@@ -1,22 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
-using Zop.Repositories.ChangeDetector;
 using Zop.Repositories.Configuration;
 
 namespace Zop.Repositories
 {
-    public class ApiResourceRepository : EFRepository<ApiResource, int>, IApiResourceDataStore
+    public class ApiResourceRepository : EFRepository<ApiResource, int>, IApiResourceRepositories
     {
-        public ApiResourceRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IChangeDetector changeDetector)
-            : base(dbContext, logger, changeDetector)
+        public ApiResourceRepository(RepositoryDbContext dbContext, ILogger<ApiResourceRepository> logger, IServiceProvider serviceProvider)
+            : base(dbContext, logger, serviceProvider)
         {
 
         }

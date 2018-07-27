@@ -44,17 +44,11 @@ namespace Zop.IdentityCenter.Controllers
             if (returnUrl.IsNull())
                 return base.RedirectToAction("index");
 
-            
             string loginUrl = await service.Login(returnUrl);
             return base.Redirect(loginUrl);
         }
 
-        [HttpPost]
-        [Authorize(AuthenticationSchemes = "idc")]
-        public Task<IdentityTokenAddResponseDto> Login([FromBody]IdentityTokenAddRequestDto dto)
-        {
-            return service.Login(dto);
-        }
+
         [HttpGet]
         public async  Task<IActionResult> LoginCallback(string token)
         {

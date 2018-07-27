@@ -34,7 +34,6 @@ namespace Zop.Identity.DTO
         /// <summary>
         /// 密钥
         /// </summary>
-        [CollectionCount(minCount: 1)]
         public IList<SecretDto> Secrets { get; private set; } = new List<SecretDto>();
         /// <summary>
         /// 包含范围

@@ -1,22 +1,15 @@
-﻿using Orleans.Authorization;
+﻿using AutoMapper;
 using Orleans.Providers;
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using Microsoft.Extensions.DependencyInjection;
-using Zop.Domain.Entities;
-using Zop.Identity;
-using Zop.Repositories;
 using System.Threading.Tasks;
+using Zop.Domain.Entities;
 using Zop.DTO;
+using Zop.Identity;
 using Zop.Identity.DTO;
-using Zop.Toolkit.IDGenerator;
-using AutoMapper;
-using System.Text;
+using Zop.Repositories;
 
 namespace Zop.Application.Services
 {
-    [Authorize]
     [StorageProvider(ProviderName = RepositoryStorage.DefaultName)]
     public class IdentityTokenService : ApplicationService<IdentityToken>, IIdentityTokenService
     {

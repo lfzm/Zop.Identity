@@ -10,7 +10,7 @@ namespace Zop.Identity.DTO
         /// <summary>
         /// Key
         /// </summary>
-        public  string Key { get;  set; }
+        public string Key { get;  set; }
         /// <summary>
         /// 认证主题ID
         /// </summary>
@@ -19,6 +19,10 @@ namespace Zop.Identity.DTO
         /// 认证数据
         /// </summary>
         public Dictionary<string,string> Data { get; set; }
+        /// <summary>
+        /// 认证IP
+        /// </summary>
+        public string IdentityIP4 { get; set; }
         /// <summary>
         /// 返回链接
         /// </summary>

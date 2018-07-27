@@ -27,7 +27,7 @@ namespace Zop.Identity.Test.Configurator
             const string connectionString = @"Database=zop_ids;Data Source=120.78.175.212;User Id=root;Password=zwcsroot;pooling=false;";
             services.AddAutoMapper(c=>
             {
-                c.RegisterAllMappings(typeof(Zop.Identity.Server.MigrationsDbContext).Assembly);
+                c.RegisterAllMappings(typeof(Zop.MigrationsDbContext).Assembly);
             });
             services.AddIdentityApplication();
             services.AddRepositoryStorage(rb =>

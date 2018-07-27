@@ -1,10 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Zop.Toolkit.Security;
 
 namespace Zop.IdentityCenter.Configuration
 {
@@ -48,7 +44,7 @@ namespace Zop.IdentityCenter.Configuration
         {
             get
             {
-                RSAParameters param = Zop.Toolkit.Security.RSA.DecodePkcsPrivateKey(SigningCredential);
+                RSAParameters param = Zop.Extensions.Security.RSA.DecodePkcsPrivateKey(SigningCredential);
                 return new RsaSecurityKey(param);
             }
         }

@@ -2,13 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Orleans;
-using Orleans.Authorization;
 using Orleans.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
 using Zop.DTO;
 using Zop.Identity;
@@ -17,7 +15,6 @@ using Zop.Repositories;
 
 namespace Zop.Application.Services
 {
-    [Authorize]
     [StorageProvider(ProviderName = RepositoryStorage.DefaultName)]
     public class PersistedGrantService : ApplicationService<PersistedGrant>, IPersistedGrantService
     {
@@ -31,7 +28,7 @@ namespace Zop.Application.Services
             if (subjectId.IsNull())
                 return new List<PersistedGrantDto>();
             //通过数据商店获取数据
-            var resources = await base.ServiceProvider.GetRequiredService<IPersistedGrantDataStore>().GetListAsync(subjectId);
+            var resources = await base.ServiceProvider.GetRequiredService<IPersistedGrantRepositories>().GetListAsync(subjectId);
             if (resources == null || resources.Count == 0)
                 return new List<PersistedGrantDto>();
             return resources.Select(f => Mapper.Map<PersistedGrantDto>(f)).ToList();
@@ -46,7 +43,7 @@ namespace Zop.Application.Services
         public async Task<ResultResponseDto> RemoveAllAsync(string subjectId, string clientId)
         {
             //通过数据商店获取数据
-            var keys = await base.ServiceProvider.GetRequiredService<IPersistedGrantDataStore>().GetKeysAsync(subjectId, clientId);
+            var keys = await base.ServiceProvider.GetRequiredService<IPersistedGrantRepositories>().GetKeysAsync(subjectId, clientId);
             if (keys == null || keys.Count == 0)
                 return Result.ReSuccess<ResultResponseDto>();
 
@@ -59,7 +56,7 @@ namespace Zop.Application.Services
         public async Task<ResultResponseDto> RemoveAllAsync(string subjectId, string clientId, string type)
         {
             //通过数据商店获取数据
-            var keys = await base.ServiceProvider.GetRequiredService<IPersistedGrantDataStore>().GetKeysAsync(subjectId, clientId, type);
+            var keys = await base.ServiceProvider.GetRequiredService<IPersistedGrantRepositories>().GetKeysAsync(subjectId, clientId, type);
             if (keys == null || keys.Count == 0)
                 return Result.ReSuccess<ResultResponseDto>();
 

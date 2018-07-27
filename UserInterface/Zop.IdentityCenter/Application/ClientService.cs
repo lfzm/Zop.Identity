@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using IdentityServer4.Models;
-using Zop.OrleansClient;
-using AutoMapper;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
+using Zop.Extensions.OrleansClient;
 
 namespace Zop.IdentityCenter.Application
 {
@@ -22,7 +20,7 @@ namespace Zop.IdentityCenter.Application
         {
             if (clientId.IsNull())
                 return null;
-            var service = client.GetGrain<Zop.Identity.IClientService>(clientId, OrleansClient.AccessTokenType.NotCredentials);
+            var service = client.GetGrain<Zop.Identity.IClientService>(clientId);
             var cli = await service.GetAsync();
             if (cli == null)
                 return null;

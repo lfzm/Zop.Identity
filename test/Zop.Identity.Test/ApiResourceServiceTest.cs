@@ -33,11 +33,11 @@ namespace Zop.Identity.Test
             IApiResourceService service = Startup.CreateCluster().GrainFactory.GetGrain<IApiResourceService>(0);
             var request = new DTO.ApiResourceAddRequestDto()
             {
-                Description = "基金服务API",
-                DisplayName = "基金服务",
-                Name = "FM_API"
+                Description = "COTC_API",
+                DisplayName = "COTC服务",
+                Name = "COTC_API"
             };
-            var secret = new DTO.SecretDto("d7sUJjDOwN5QgqqWIhQoXKMqQR13HKpL", "基金服务-d7sUJjDOwN5QgqqWIhQoXKMqQR13HKpL", Convert.ToDateTime( "2030-01-01 12:12:12"));
+            var secret = new DTO.SecretDto("d7sUJjDOwN5QgqqWIhQoXKMqQR13HKpL", "基金服务-d7sUJjDOwN5QgqqWIhQoXKMqQR13HKpL", Convert.ToDateTime("2030-01-01 12:12:12"));
             request.Secrets.Add(secret);
             var r = await  service.AddAsync(request);
         }

@@ -13,12 +13,7 @@ namespace Zop.IdentityCenter.Application
         /// <param name="returnUrl">登录成功返回链接</param>
         /// <returns></returns>
         Task<string> Login(string returnUrl);
-        /// <summary>
-        /// 登录
-        /// </summary>
-        /// <param name="dto">登录请求</param>
-        /// <returns></returns>
-        Task<IdentityTokenAddResponseDto> Login(IdentityTokenAddRequestDto dto);
+
         /// <summary>
         /// 登录回调
         /// </summary>

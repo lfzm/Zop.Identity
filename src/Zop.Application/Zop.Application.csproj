@@ -1,22 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Zop.Identity\Zop.Identity.csproj" />
+    <ProjectReference Include="..\Zop.Domain\Zop.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Orleans.OrleansCodeGenerator.Build" Version="2.0.3" />
-    <PackageReference Include="Orleans.Authorization" Version="0.0.9" />
-    <PackageReference Include="Zop.Orleans" Version="2.0.0-bate1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Services\" />
-    <Folder Include="Domain\Values\" />
+    <PackageReference Include="Microsoft.Orleans.OrleansRuntime" Version="2.0.4" />
+    <PackageReference Include="Zop.Extensions" Version="3.0.0-bate01" />
   </ItemGroup>
 
 </Project>

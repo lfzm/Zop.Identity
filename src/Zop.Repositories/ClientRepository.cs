@@ -3,23 +3,18 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Zop.Application.DataStore;
 using Zop.Domain.Entities;
-using Zop.Repositories.ChangeDetector;
 using Zop.Repositories.Configuration;
 
 namespace Zop.Repositories
 {
-    public class ClientRepository : EFRepository<Client, string>, IClientDataStore
+    public class ClientRepository : EFRepository<Client, string>, IClientRepositories
     {
-
-        public ClientRepository(RepositoryDbContext _dbContext, ILogger<ClientRepository> logger, IChangeDetector changeDetector)
-            :base(_dbContext,logger,changeDetector)
+        public ClientRepository(RepositoryDbContext _dbContext, ILogger<ClientRepository> logger, IServiceProvider serviceProvider)
+            :base(_dbContext,logger, serviceProvider)
         {
           
         }
-
-
 
         public override Task<Client> GetAsync(string id)
         {
@@ -29,12 +24,11 @@ namespace Zop.Repositories
                    .Include(x => x.Claims)
                    .Include(x => x.Properties)
                    .Include(x => x.Secrets)
-                   .Where(f => f.Id == id)
+                   .Where(f => f.Id == id )
                    .FirstOrDefault();
             return Task.FromResult(client);
         }
 
-      
         public Task<bool> IsOriginAllowedAsync(string origin)
         {
             var count = this.dbContext.Clients.Where(f => f.AllowedCorsOrigins.Contains(origin + ";")).Count();
